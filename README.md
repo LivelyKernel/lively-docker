@@ -10,18 +10,19 @@ Docker on MacOS runs inside a [VirtualBox](https://www.virtualbox.org/) image, s
 brew install docker boot2docker
 ```
 
-Make sure the rest of your sytems can talk to the boot2docker distro:
-
-```sh
-echo 'export DOCKER_HOST=tcp://127.0.0.1:2375' >> ~/.bash_profile
-```
-
 Now initialize boot2docker:
 
 ```sh
 boot2docker download
 boot2docker init
 boot2docker up
+```
+
+Make sure the rest of your sytems can talk to the boot2docker distro by copying (and executing) the enviroment settings suggested by docker (replace IP address and username):
+
+```sh
+export DOCKER_HOST=tcp://[IP address]:2376
+echo 'export DOCKER_HOST=tcp://[IP address]:2376' >> ~/.bash_profile
 ```
 
 ## Install and Run Lively
