@@ -26,7 +26,7 @@ RUN node -e "require('./bin/env'); require('./bin/helper/download-partsbin')();"
 RUN npm install forever -g
 
 # object DB, sqlite
-ADD objects.sqlite /var/www/LivelyKernel/objects.sqlite
+# ADD objects.sqlite /var/www/LivelyKernel/objects.sqlite
 
 ENV livelyport 9001
 EXPOSE 9001
