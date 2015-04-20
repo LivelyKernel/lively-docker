@@ -31,6 +31,7 @@ Using the Dockerfile in this repo you can now build and run Lively:
 
 ```sh
 git clone https://github.com/LivelyKernel/lively-docker/
+cd lively-docker
 docker build --rm -t lively-server .
 docker run -p 9001:9001 -i -t lively-server
 ```
