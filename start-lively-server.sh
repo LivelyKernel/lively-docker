@@ -12,7 +12,7 @@ fi
 
 rm *.pid 2>/dev/null;
 
-node bin/lk-server \
+forever bin/lk-server.js \
      --host 0.0.0.0 \
      -p 9001 \
      --behind-proxy | tee $HOME/logs/lively.log
