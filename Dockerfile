@@ -1,37 +1,44 @@
-FROM          dockerfile/nodejs
+FROM          node
 MAINTAINER    Robert Krahn <robert.krahn@gmail.com>
 
+USER root
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get -y install curl git bzip2 unzip
+RUN apt-get update; \
+    apt-get upgrade -y; \
+    apt-get -y install curl git bzip2 unzip zip \
+                       sudo lsof sysstat dnsutils
 
-# for debugging
-RUN npm install -g node-inspector
-RUN apt-get install lsof
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-# lively
-RUN mkdir -p /var/www/
-RUN git clone https://github.com/LivelyKernel/LivelyKernel /var/www/LivelyKernel
+# lively user
+RUN /usr/sbin/useradd \
+    --create-home --home-dir /home/lively \
+     --shell /bin/bash \
+     --groups sudo \
+     --password niHEcdDiD3J1o \
+     lively
 
-WORKDIR /var/www/LivelyKernel
-RUN npm install
-ENV WORKSPACE_LK /var/www/LivelyKernel
-
-# PartsBin
-RUN node -e "require('./bin/env'); require('./bin/helper/download-partsbin')();"
-# ADD PartsBin/ /var/www/LivelyKernel/PartsBin/ # <-- alternative
-
-# optional lively dependencies
+# nodejs tooling
 RUN npm install forever -g
 
-# object DB, sqlite
-ADD objects.sqlite /var/www/LivelyKernel/objects.sqlite
+# lively
+ENV WORKSPACE_LK=/home/lively/LivelyKernel \
+    HOME=/home/lively
 
-ENV livelyport 9001
-EXPOSE 9001
-EXPOSE 9002
-EXPOSE 9003
-EXPOSE 9004
+USER lively
 
-CMD npm start
+RUN mkdir /home/lively/bin
+ENV PATH=$HOME/bin:$PATH
+
+ADD gitconfig /home/lively/.gitconfig
+ADD start-lively-server.sh /home/lively/bin/start-lively-server.sh
+USER root
+RUN chown lively $HOME/bin/start-lively-server.sh; \
+    chmod a+x $HOME/bin/start-lively-server.sh
+USER lively
+
+EXPOSE 9001 9002 9003 9004 9005
+
+WORKDIR /home/lively/LivelyKernel
+
+CMD start-lively-server.sh

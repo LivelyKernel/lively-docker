@@ -1,5 +1,22 @@
 # Running [Lively Web](https://github.com/LivelyKernel/LivelyKernel) on Docker
 
+## Install and Run Lively
+
+Using the Dockerfile in this repo you can now build and run Lively:
+
+```sh
+git clone https://github.com/LivelyKernel/lively-docker/
+docker build --rm -t lively-server .
+./start.sh
+```
+
+The script will create a a directory LivelyKernel in the base folder if no such folder exists yet and will git clone Lively into it. If you want to use an exisiting Lively install just copy it into this LivelyKernel folder before running start.sh.
+
+
+<!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
+
+
+
 ## [Docker](http://www.docker.com/) setup on MacOS
 
 First make sure you have [homebrew](http://brew.sh/) installed.
@@ -25,36 +42,10 @@ export DOCKER_HOST=tcp://[IP address]:2376
 echo 'export DOCKER_HOST=tcp://[IP address]:2376' >> ~/.bash_profile
 ```
 
-## Install and Run Lively
-
-Using the Dockerfile in this repo you can now build and run Lively:
-
-```sh
-git clone https://github.com/LivelyKernel/lively-docker/
-docker build --rm -t lively-server .
-docker run -p 9001:9001 -i -t lively-server
-```
+### Port forwarding with boot2docker
 
 Specifically for MacOS: Above command only forwards port 9001 from the Docker container to the boot2docker distro running in your VBox image. To also forward this port from VBox to your main machine run:
 
 ```sh
 VBoxManage controlvm boot2docker-vm natpf1 "lively-server,tcp,127.0.0.1,9001,,9001"
 ```
-
-
-<!--## Important-->
-<!--Make sure objects.sqlite is existant`touch objects.sqlite` !!!-->
-
-<!--Later, when lively started up you can get a "real" copy of the objects DB via-->
-<!--`curl localhost:9001/objects.sqlite > objects.sqlite` and rebuild the server to-->
-<!--have a shorter startup time.-->
-
-<!--### Mac OS hint-->
-
-<!--If you run docker via [boot2docker](https://github.com/boot2docker/boot2docker)-->
-<!--then make sure you not only forward ports between the lively-server and the-->
-<!--boot2docker environment but also between boot2docker and Mac OS:-->
-
-<!--```sh-->
-<!--VBoxManage controlvm boot2docker-vm natpf1 "lively-server,tcp,127.0.0.1,9001,,9001"-->
-<!--```-->
