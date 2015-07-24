@@ -1,44 +1,45 @@
-FROM          node
+FROM          dockerfile/nodejs
 MAINTAINER    Robert Krahn <robert.krahn@gmail.com>
 
-USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update; \
     apt-get upgrade -y; \
     apt-get -y install curl git bzip2 unzip zip \
-                       sudo lsof sysstat dnsutils
+                       lsof sysstat dnsutils
 
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-# lively user
+# lively user, password: livelyrocks
+# openssl passwd -1 livelyrocks
 RUN /usr/sbin/useradd \
     --create-home --home-dir /home/lively \
      --shell /bin/bash \
      --groups sudo \
-     --password niHEcdDiD3J1o \
+     --password "$1$nEklFay0$7HTGsdmybFMWcH52WPqH0." \
      lively
 
+# git
+ADD gitconfig /home/lively/.gitconfig
+
 # nodejs tooling
-RUN npm install forever -g
+RUN npm install -g \
+  node-inspector \
+  nodemon forever \
+  phantomjs \
+  http-server \
+  grunt-cli
+
+# For the Lively spell checker:
+RUN apt-get install -y aspell
 
 # lively
 ENV WORKSPACE_LK=/home/lively/LivelyKernel \
-    HOME=/home/lively
+    HOME=/home/lively \
+    livelyport=9001
 
 USER lively
-
-RUN mkdir /home/lively/bin
-ENV PATH=$HOME/bin:$PATH
-
-ADD gitconfig /home/lively/.gitconfig
-ADD start-lively-server.sh /home/lively/bin/start-lively-server.sh
-USER root
-RUN chown lively $HOME/bin/start-lively-server.sh; \
-    chmod a+x $HOME/bin/start-lively-server.sh
-USER lively
-
-EXPOSE 9001 9002 9003 9004 9005
 
 WORKDIR /home/lively/LivelyKernel
 
-CMD start-lively-server.sh
+EXPOSE 9001 9002 9003 9004
+
+CMD rm *.pid; \
+    node_modules/.bin/forever bin/lk-server.js -p 9001 --behind-proxy
