@@ -1,3 +1,6 @@
 LivelyKernel/
 logs/
 .git/
+start.sh
+README.md
+opencv/

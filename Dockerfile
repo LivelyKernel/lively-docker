@@ -1,4 +1,4 @@
-FROM          dockerfile/nodejs
+FROM          node:slim
 MAINTAINER    Robert Krahn <robert.krahn@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -41,5 +41,7 @@ WORKDIR /home/lively/LivelyKernel
 
 EXPOSE 9001 9002 9003 9004
 
-CMD rm *.pid; \
-    node_modules/.bin/forever bin/lk-server.js -p 9001 --behind-proxy
+CMD rm "*.pid" >/dev/null 2>&1; \
+    [ ! -d node_modules/ ] && npm install; \
+    forever bin/lk-server.js \
+    --port 9001 --host 0.0.0.0 --behind-proxy
