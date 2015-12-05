@@ -2,7 +2,6 @@
 
 lively_dir="$PWD/LivelyKernel"
 container_name="lively-server"
-container_name="lively-docker-test"
 
 mkdir -p $lively_dir
 
