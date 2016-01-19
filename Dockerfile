@@ -1,4 +1,4 @@
-FROM          node:slim
+FROM          node:4-slim
 MAINTAINER    Robert Krahn <robert.krahn@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -39,7 +39,7 @@ USER lively
 
 WORKDIR /home/lively/LivelyKernel
 
-EXPOSE 9001 9002 9003 9004
+EXPOSE 9001-9004
 
 CMD rm "*.pid" >/dev/null 2>&1; \
     [ ! -d node_modules/ ] && npm install; \
