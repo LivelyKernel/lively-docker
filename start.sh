@@ -14,12 +14,14 @@ if [[ -z $dir_content ]]; then
     popd
 fi
 
-shutdown() { 
+shutdown() {
   echo "Stopping container..."
-  docker ps --filter "image-name=$container_name" -q | xargs docker kill
+  docker ps --filter "ancestor=$container_name" -q | xargs docker stop
 }
 
 trap shutdown SIGTERM SIGKILL SIGINT
+
+# docker exec -it lively-server /bin/bash
 
 docker run --rm \
     -v $lively_dir:/home/lively/LivelyKernel \
