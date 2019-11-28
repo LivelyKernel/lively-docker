@@ -23,7 +23,12 @@ Additionally, it will pull down the PartsBin and user directory from
 [lively-web.org](https://lively-web.org). If you want to use an exisiting Lively
 install just copy it into this LivelyKernel folder before running start.sh.
 
-After the setup steps are done you will be able to acess Lively at http://localhost:9001/
+_Please note:_ the `start.sh` script will take a few minutes to run the first
+time around. This is completly normal, just hang on ;)
+
+After the setup steps are done (a message along the lines of `Lively server
+starting...` appears in the command output) you will be able to acess Lively at
+http://localhost:9001/
 
 <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
 
