@@ -34,8 +34,6 @@ http://localhost:9001/
 
 ## Notes for MacOS
 
-## [Docker](http://www.docker.com/) setup on MacOS
-
 1. Install docker as described here: https://docs.docker.com/installation/mac/
 
 2. Make sure that the tcp port the Lively server is running on is forwarded by docker-machine (actually virtualbox):
