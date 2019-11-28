@@ -8,7 +8,7 @@ RUN apt-get update; \
                        lsof sysstat dnsutils \
                        sudo
 
-# lively user, password: livelyrocks
+# lively user, password: lively
 # openssl passwd -1 lively
 RUN /usr/sbin/useradd \
     --create-home --home-dir /home/lively \
