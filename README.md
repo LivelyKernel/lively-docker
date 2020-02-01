@@ -30,6 +30,51 @@ After the setup steps are done (a message along the lines of `Lively server
 starting...` appears in the command output) you will be able to acess Lively at
 http://localhost:9001/
 
+## Public webserver
+
+If you want to serve Lively server as part of a public web page, [it's best](https://medium.com/intrinsic/why-should-i-use-a-reverse-proxy-if-node-js-is-production-ready-5a079408b2ca) to proxy it behind another server such as nginx. The nginx config for lively-web.org looks like:
+
+```config
+server {
+    listen 80;
+    server_name localhost lively-web.org www.lively-web.org;
+    return 301 https://$host$request_uri;
+}
+
+server {
+
+    listen 443;
+    server_name localhost lively-web.org www.lively-web.org;
+
+    # upload
+    client_max_body_size 15m;
+
+    # ssl
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/lively-web.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lively-web.org/privkey.pem;
+
+    location = / {
+        index /welcome.html;
+    }
+
+    location / {
+        proxy_pass http://localhost:9001;
+
+        # proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # proxy websockets:
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+```
+
 <!-- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- -->
 
 ## Notes for MacOS
